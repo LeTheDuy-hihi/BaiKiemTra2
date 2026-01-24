@@ -1,0 +1,101 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Đăng Ký";
+}
+
+<style>
+    .auth-container {
+        max-width: 500px;
+        margin: 3rem auto;
+    }
+    
+    .auth-card {
+        background: white;
+        border-radius: 24px;
+        padding: 3rem;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+        border: 3px solid transparent;
+        background-image: linear-gradient(white, white), linear-gradient(135deg, #FF6B35 0%, #FF8C61 100%);
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
+    }
+    
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .auth-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+    
+    .auth-title {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #1A1A1A;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+    }
+    
+    .auth-subtitle {
+        color: #757575;
+        font-size: 1.05rem;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <span class="auth-icon">✨</span>
+            <h1 class="auth-title">Đăng Ký</h1>
+            <p class="auth-subtitle">Tham gia CLB Vợt Thủ Phố Núi!</p>
+        </div>
+
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+            
+            <div class="form-group">
+                <label class="form-label" asp-for="Input.FullName">Họ và Tên</label>
+                <input class="form-control" asp-for="Input.FullName" placeholder="Nguyễn Văn A" />
+                <span asp-validation-for="Input.FullName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="Input.Email">Email</label>
+                <input class="form-control" asp-for="Input.Email" autocomplete="username" placeholder="your@email.com" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="Input.Password">Mật Khẩu</label>
+                <input class="form-control" asp-for="Input.Password" type="password" autocomplete="new-password" placeholder="••••••••" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="Input.ConfirmPassword">Xác Nhận Mật Khẩu</label>
+                <input class="form-control" asp-for="Input.ConfirmPassword" type="password" autocomplete="new-password" placeholder="••••••••" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                🎯 Đăng Ký Ngay
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #E8EAED;">
+            <p style="color: #757575;">Đã có tài khoản?</p>
+            <a href="/Account/Login" class="btn btn-secondary">
+                🔑 Đăng Nhập
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

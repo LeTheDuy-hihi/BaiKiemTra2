@@ -1,0 +1,90 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+@model PickleballClubManagement.Pages.Challenges.ManageModel
+@{
+    ViewData["Title"] = "Quản Lý Kèo";
+}
+
+<div class="page-header">
+    <h1 class="page-title">📋 Quản Lý Kèo Đấu</h1>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div style="margin-bottom: 2rem;">
+    <div style="display: flex; gap: 1rem;">
+        <button class="btn @(Model.FilterStatus == null ? "btn-primary" : "btn-secondary")" 
+                onclick="window.location.href='/Challenges/Manage'">
+            Tất Cả (@Model.AllChallenges.Count)
+        </button>
+        <button class="btn @(Model.FilterStatus == ChallengeStatus.Open ? "btn-primary" : "btn-secondary")" 
+                onclick="window.location.href='/Challenges/Manage?status=0'">
+            🔵 Đang Mở (@Model.AllChallenges.Count(c => c.Status == ChallengeStatus.Open))
+        </button>
+        <button class="btn @(Model.FilterStatus == ChallengeStatus.Accepted ? "btn-primary" : "btn-secondary")" 
+                onclick="window.location.href='/Challenges/Manage?status=1'">
+            🟠 Đã Chốt (@Model.AllChallenges.Count(c => c.Status == ChallengeStatus.Accepted))
+        </button>
+        <button class="btn @(Model.FilterStatus == ChallengeStatus.Completed ? "btn-primary" : "btn-secondary")" 
+                onclick="window.location.href='/Challenges/Manage?status=2'">
+            🟢 Hoàn Thành (@Model.AllChallenges.Count(c => c.Status == ChallengeStatus.Completed))
+        </button>
+    </div>
+</div>
+
+@if (Model.Challenges.Any())
+{
+    <div class="grid" style="grid-template-columns: 1fr;">
+        @foreach (var challenge in Model.Challenges)
+        {
+            <div class="card">
+                <div class="card-header">
+                    @if (challenge.Status == ChallengeStatus.Open)
+                    {
+                        <span class="status-badge status-open">🔵 Đang Tìm Đối</span>
+                    }
+                    else if (challenge.Status == ChallengeStatus.Accepted)
+                    {
+                        <span class="status-badge status-accepted">🟠 Đã Chốt Kèo</span>
+                    }
+                    else
+                    {
+                        <span class="status-badge status-completed">🟢 Hoàn Thành</span>
+                    }
+                    <span class="text-muted">@challenge.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                </div>
+                
+                <div class="card-body">
+                    <h3 class="card-title">@challenge.Title</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <strong>Người tạo:</strong> @challenge.Creator?.FullName
+                        @if (challenge.Creator != null)
+                        {
+                            <span class="rank-badge">⭐ @challenge.Creator.RankLevel.ToString("F1")</span>
+                        }
+                    </div>
+                    <p class="text-muted">@challenge.Description</p>
+                </div>
+                
+                <div class="card-footer">
+                    <span style="color: var(--color-gray-600); font-size: 0.875rem;">
+                        ID: #@challenge.Id
+                    </span>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">📋</div>
+        <p class="empty-state-text">Không có kèo nào @(Model.FilterStatus.HasValue ? "ở trạng thái này" : "")</p>
+    </div>
+}

@@ -1,0 +1,88 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+@model PickleballClubManagement.Pages.Financial.IndexModel
+@{
+    ViewData["Title"] = "Quản Lý Tài Chính";
+}
+
+<div class="page-header">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1 class="page-title">💰 Quản Lý Thu Chi</h1>
+        <a href="/Financial/Create" class="btn btn-primary">➕ Ghi Nhận Giao Dịch</a>
+    </div>
+</div>
+
+<div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem;">
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 2rem; font-weight: 900; color: #00A86B;">@Model.TotalIncome.ToString("N0") đ</div>
+        <div class="text-muted">Tổng Thu</div>
+    </div>
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 2rem; font-weight: 900; color: #FF6B35;">@Model.TotalExpense.ToString("N0") đ</div>
+        <div class="text-muted">Tổng Chi</div>
+    </div>
+    <div class="card" style="text-align: center; border: 2px solid @(Model.CurrentBalance < 0 ? "red" : "#0077BE");">
+        <div style="font-size: 2rem; font-weight: 900; color: @(Model.CurrentBalance < 0 ? "red" : "#0077BE");">
+            @Model.CurrentBalance.ToString("N0") đ
+        </div>
+        <div class="text-muted">Số Dư Quỹ</div>
+        @if (Model.CurrentBalance < 0)
+        {
+            <div style="color: red; font-weight: bold; margin-top: 0.5rem; animation: pulse 1s infinite;">⚠️ CẢNH BÁO: QUỸ ÂM!</div>
+        }
+    </div>
+</div>
+
+<div class="card">
+    <h3 class="card-title">📜 Lịch Sử Giao Dịch</h3>
+    
+    @if (Model.Transactions.Any())
+    {
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #eee; text-align: left;">
+                        <th style="padding: 1rem;">Ngày</th>
+                        <th style="padding: 1rem;">Nội Dung</th>
+                        <th style="padding: 1rem;">Danh Mục</th>
+                        <th style="padding: 1rem; text-align: right;">Số Tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tran in Model.Transactions)
+                    {
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 1rem;">@tran.Date.ToString("dd/MM/yyyy")</td>
+                            <td style="padding: 1rem;">@tran.Description</td>
+                            <td style="padding: 1rem;">
+                                <span class="status-badge @(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "status-accepted" : "status-completed")">
+                                    @tran.Category?.Name
+                                </span>
+                            </td>
+                            <td style="padding: 1rem; text-align: right; font-weight: 700; color: @(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "#00A86B" : "#FF6B35");">
+                                @(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "+" : "-")
+                                @tran.Amount.ToString("N0") đ
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon">💸</div>
+            <p class="empty-state-text">Chưa có giao dịch nào</p>
+        </div>
+    }
+</div>
+
+<style>
+    @@keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+</style>

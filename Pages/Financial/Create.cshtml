@@ -1,0 +1,66 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+@model PickleballClubManagement.Pages.Financial.CreateModel
+@{
+    ViewData["Title"] = "Ghi Nhận Giao Dịch";
+}
+
+<div class="page-header">
+    <h1 class="page-title">💳 Ghi Nhận Thu/Chi Mới</h1>
+</div>
+
+<div class="auth-container" style="max-width: 600px;">
+    <div class="card">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+            
+            <div class="form-group">
+                <label class="form-label">Loại Giao Dịch (Danh Mục)</label>
+                <select class="form-control" asp-for="Input.CategoryId">
+                    <option value="">-- Chọn danh mục --</option>
+                    <optgroup label="🔴 Khoản Chi">
+                        @foreach (var cat in Model.Categories.Where(c => c.Type == PickleballClubManagement.Models.TransactionType.Expense))
+                        {
+                            <option value="@cat.Id">@cat.Name</option>
+                        }
+                    </optgroup>
+                    <optgroup label="🟢 Khoản Thu">
+                        @foreach (var cat in Model.Categories.Where(c => c.Type == PickleballClubManagement.Models.TransactionType.Income))
+                        {
+                            <option value="@cat.Id">@cat.Name</option>
+                        }
+                    </optgroup>
+                </select>
+                <span asp-validation-for="Input.CategoryId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Số Tiền (VNĐ)</label>
+                <input class="form-control" asp-for="Input.Amount" type="number" step="1000" min="0" placeholder="0" />
+                <span asp-validation-for="Input.Amount" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Ngày Giao Dịch</label>
+                <input class="form-control" asp-for="Input.Date" type="date" />
+                <span asp-validation-for="Input.Date" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Mô Tả Chi Tiết</label>
+                <textarea class="form-control" asp-for="Input.Description" rows="3" placeholder="Ví dụ: Mua 10 hộp bóng, Thu tiền sân nhóm anh A..."></textarea>
+                <span asp-validation-for="Input.Description" class="text-danger"></span>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <a href="/Financial/Index" class="btn btn-secondary">Hủy</a>
+                <button type="submit" class="btn btn-primary" style="flex: 1;">💾 Lưu Giao Dịch</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

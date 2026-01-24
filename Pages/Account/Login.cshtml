@@ -1,0 +1,125 @@
+@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Đăng Nhập";
+}
+
+<style>
+    .auth-container {
+        max-width: 500px;
+        margin: 3rem auto;
+    }
+    
+    .auth-card {
+        background: white;
+        border-radius: 24px;
+        padding: 3rem;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+        border: 3px solid transparent;
+        background-image: linear-gradient(white, white), linear-gradient(135deg, #00A86B 0%, #0077BE 100%);
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
+    }
+    
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .auth-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+    
+    .auth-title {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #1A1A1A;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+    }
+    
+    .auth-subtitle {
+        color: #757575;
+        font-size: 1.05rem;
+    }
+    
+    .demo-credentials {
+        background: linear-gradient(135deg, rgba(0, 168, 107, 0.1) 0%, rgba(0, 119, 190, 0.1) 100%);
+        border-left: 4px solid #00A86B;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+    
+    .demo-credentials strong {
+        color: #00A86B;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+    }
+    
+    .demo-credentials code {
+        background: rgba(0, 0, 0, 0.05);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <span class="auth-icon">🏓</span>
+            <h1 class="auth-title">Đăng Nhập</h1>
+            <p class="auth-subtitle">Vào sân và bắt đầu thi đấu!</p>
+        </div>
+
+        <div class="demo-credentials">
+            <strong>🔑 Tài Khoản Demo:</strong>
+            <div>Email: <code>admin@pickleballclub.com</code></div>
+            <div>Password: <code>Admin@123</code></div>
+        </div>
+
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+            
+            <div class="form-group">
+                <label class="form-label" asp-for="Input.Email">Email</label>
+                <input class="form-control" asp-for="Input.Email" autocomplete="username" placeholder="your@email.com" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="Input.Password">Mật Khẩu</label>
+                <input class="form-control" asp-for="Input.Password" type="password" autocomplete="current-password" placeholder="••••••••" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" asp-for="Input.RememberMe" />
+                    <label class="form-label" asp-for="Input.RememberMe">Ghi nhớ đăng nhập</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                🚀 Đăng Nhập
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #E8EAED;">
+            <p style="color: #757575;">Chưa có tài khoản?</p>
+            <a href="/Account/Register" class="btn btn-secondary">
+                ✨ Đăng Ký Ngay
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

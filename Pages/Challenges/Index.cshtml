@@ -1,0 +1,111 @@
+@page
+@model PickleballClubManagement.Pages.Challenges.IndexModel
+@{
+    ViewData["Title"] = "Sàn Đấu Kèo";
+}
+
+<div class="page-header">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 class="page-title">⚔️ Sàn Đấu Kèo</h1>
+            <p class="text-muted">Tìm đối thủ xứng tầm hoặc tham gia giải đấu!</p>
+        </div>
+        <a href="/Challenges/Create" class="btn btn-primary btn-lg">
+            🔥 Tạo Kèo Mới
+        </a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="grid">
+    @foreach (var challenge in Model.Challenges)
+    {
+        var isMiniGame = challenge.Type == PickleballClubManagement.Models.ChallengeType.MiniGame;
+        
+        <div class="card @(isMiniGame ? "card-minigame" : "")">
+            <div class="card-header">
+                @if (isMiniGame)
+                {
+                    <span class="status-badge status-ongoing">🏆 Giải Đấu</span>
+                }
+                else
+                {
+                    <span class="status-badge status-open">🟢 Tìm Đối</span>
+                }
+                <span class="text-muted">@challenge.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+            </div>
+            
+            <div class="card-body">
+                <h3 class="card-title">@challenge.Title</h3>
+                
+                @if (isMiniGame)
+                {
+                    <div style="margin-bottom: 1rem; color: #E65100; font-weight: 600;">
+                        @(challenge.ResultMode == PickleballClubManagement.Models.GameMode.TeamBattle ? "⚔️ Team Battle" : "🔄 Vòng Tròn")
+                    </div>
+                }
+
+                <p class="text-muted" style="margin-bottom: 1.5rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">@challenge.Description</p>
+                
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                    <div class="stat-badge">
+                        👤 @challenge.Creator?.FullName
+                    </div>
+                    @if (challenge.Creator != null)
+                    {
+                        <div class="stat-badge">
+                            ⭐ Rank @challenge.Creator.RankLevel.ToString("F1")
+                        </div>
+                    }
+                    
+                    @if (isMiniGame)
+                    {
+                        <div class="stat-badge" style="background: #FFF3E0; color: #E65100;">
+                            💰 Thưởng: @challenge.PrizePool.ToString("N0") đ
+                        </div>
+                        <div class="stat-badge" style="background: #E3F2FD; color: #0D47A1;">
+                            🎫 Vé: @challenge.EntryFee.ToString("N0") đ
+                        </div>
+                    }
+                </div>
+
+                <form method="post" asp-page-handler="Accept" asp-route-id="@challenge.Id">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        @(isMiniGame ? "📝 Đăng Ký Tham Gia" : "🤝 Nhận Kèo Này")
+                    </button>
+                </form>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Challenges.Any())
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">🎾</div>
+        <p class="empty-state-text">Chưa có kèo nào đang mở. Hãy là người đầu tiên tạo kèo!</p>
+        <a href="/Challenges/Create" class="btn btn-primary" style="margin-top: 1rem;">
+            🔥 Tạo Kèo Ngay
+        </a>
+    </div>
+}
+
+<style>
+    .card-minigame {
+        border: 2px solid #FF9800;
+        background: linear-gradient(to bottom right, #fff, #FFF3E0);
+    }
+    .stat-badge {
+        background: var(--color-gray-100);
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+</style>

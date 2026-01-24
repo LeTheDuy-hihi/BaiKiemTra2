@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Vợt Thủ Phố Núi</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="/" class="site-logo">
+                <span>🏓</span>
+                <span>Vợt Thủ Phố Núi</span>
+            </a>
+            
+            <nav class="site-nav">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a href="/Matches/Create" class="nav-link">⚖️ Nhập Kết Quả</a>
+                        <a href="/Challenges/Manage" class="nav-link">📋 Quản Lý Kèo</a>
+                        <a href="/Financial/Index" class="nav-link">💰 Tài Chính</a>
+                    }
+                    else
+                    {
+                        <a href="/Challenges" class="nav-link">⚔️ Tìm Kèo</a>
+                        <a href="/Bookings/Create" class="nav-link">📅 Đặt Sân</a>
+                        <a href="/Matches/History" class="nav-link">📜 Lịch Sử</a>
+                        <a href="/Profile" class="nav-link">👤 Hồ Sơ</a>
+                    }
+                    
+                    <div class="user-info">
+                        <span>👤 @User.Identity.Name</span>
+                        @if (ViewData["MemberRank"] != null)
+                        {
+                            <span class="rank-badge">⭐ @ViewData["MemberRank"]</span>
+                        }
+                    </div>
+                    
+                    <form method="post" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index")" style="display: inline;">
+                        <button type="submit" class="btn btn-outline btn-sm">Đăng Xuất</button>
+                    </form>
+                }
+                else
+                {
+                    <a href="/Account/Login" class="nav-link">Đăng Nhập</a>
+                    <a href="/Account/Register" class="nav-link">Đăng Ký</a>
+                }
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        @RenderBody()
+    </main>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

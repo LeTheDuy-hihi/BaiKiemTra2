@@ -1,0 +1,108 @@
+@page
+@model PickleballClubManagement.Pages.Matches.HistoryModel
+@{
+    ViewData["Title"] = "Lịch Sử Thi Đấu";
+}
+
+<div class="page-header">
+    <h1 class="page-title">📜 Lịch Sử Thi Đấu</h1>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (Model.Matches.Any())
+{
+    <div class="grid" style="grid-template-columns: 1fr;">
+        @foreach (var match in Model.Matches)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span class="status-badge status-completed">
+                            @(match.Format == MatchFormat.Singles ? "🎾 TRẬN ĐƠN" : "🎾🎾 TRẬN ĐÔI")
+                        </span>
+                        @if (match.Challenge != null)
+                        {
+                            <span class="challenge-badge">⚔️ Challenge Match</span>
+                        }
+                    </div>
+                    <span class="text-muted">@match.MatchDate.ToString("dd/MM/yyyy HH:mm")</span>
+                </div>
+
+                @if (match.Challenge != null)
+                {
+                    <div style="padding: 0.5rem 0; color: var(--color-gray-700); font-size: 0.875rem;">
+                        📌 Kèo: "@match.Challenge.Title"
+                    </div>
+                }
+
+                <div class="match-result">
+                    <div class="match-team winner">
+                        @if (match.Format == MatchFormat.Singles)
+                        {
+                            <div class="player-name">@match.Winner1?.FullName</div>
+                            <div class="text-muted" style="font-size: 0.875rem;">
+                                (⭐ @match.Winner1?.RankLevel.ToString("F1"))
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="player-name">
+                                @match.Winner1?.FullName & @match.Winner2?.FullName
+                            </div>
+                            <div class="text-muted" style="font-size: 0.875rem;">
+                                (⭐ @match.Winner1?.RankLevel.ToString("F1") & ⭐ @match.Winner2?.RankLevel.ToString("F1"))
+                            </div>
+                        }
+                        <div class="result-icon" style="font-size: 1.5rem; margin-top: 0.5rem;">✅ THẮNG</div>
+                    </div>
+
+                    <div class="vs-divider">VS</div>
+
+                    <div class="match-team loser">
+                        @if (match.Format == MatchFormat.Singles)
+                        {
+                            <div class="player-name">@match.Loser1?.FullName</div>
+                            <div class="text-muted" style="font-size: 0.875rem;">
+                                (⭐ @match.Loser1?.RankLevel.ToString("F1"))
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="player-name">
+                                @match.Loser1?.FullName & @match.Loser2?.FullName
+                            </div>
+                            <div class="text-muted" style="font-size: 0.875rem;">
+                                (⭐ @match.Loser1?.RankLevel.ToString("F1") & ⭐ @match.Loser2?.RankLevel.ToString("F1"))
+                            </div>
+                        }
+                        <div class="result-icon" style="font-size: 1.5rem; margin-top: 0.5rem;">❌ THUA</div>
+                    </div>
+                </div>
+
+                <div class="card-footer" style="justify-content: flex-start;">
+                    @if (match.IsRanked)
+                    {
+                        <span class="status-badge status-completed">⭐ Tính điểm Rank</span>
+                    }
+                    else
+                    {
+                        <span class="status-badge status-open">⚪ Không tính điểm</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">📜</div>
+        <p class="empty-state-text">Chưa có trận đấu nào được ghi nhận</p>
+    </div>
+}

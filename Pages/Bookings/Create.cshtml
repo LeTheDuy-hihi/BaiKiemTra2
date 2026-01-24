@@ -1,0 +1,110 @@
+@page
+@model PickleballClubManagement.Pages.Bookings.CreateModel
+@{
+    ViewData["Title"] = "Đặt Sân";
+}
+
+<div class="page-header">
+    <h1 class="page-title">📅 Đặt Sân CLB</h1>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-error">
+        @TempData["ErrorMessage"]
+    </div>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <!-- Booking Form -->
+    <div class="card">
+        <h3 class="card-title mb-3">Đặt Sân Mới</h3>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+            
+            <div class="form-group">
+                <label class="form-label">Chọn Sân</label>
+                <select class="form-control" asp-for="Input.CourtId">
+                    @foreach (var court in Model.Courts)
+                    {
+                        <option value="@court.Id">🏟️ @court.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="Input.CourtId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Ngày Đặt Sân</label>
+                <input class="form-control" asp-for="Input.Date" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="Input.Date" class="text-danger"></span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label class="form-label">Giờ Bắt Đầu</label>
+                    <input class="form-control" asp-for="Input.StartTime" type="time" />
+                    <span asp-validation-for="Input.StartTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Giờ Kết Thúc</label>
+                    <input class="form-control" asp-for="Input.EndTime" type="time" />
+                    <span asp-validation-for="Input.EndTime" class="text-danger"></span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Ghi Chú (Tùy chọn)</label>
+                <textarea class="form-control" asp-for="Input.Notes" rows="2" placeholder="Ví dụ: Đánh giải mini, cần thuê vợt..."></textarea>
+                <span asp-validation-for="Input.Notes" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                📅 Xác Nhận Đặt Sân
+            </button>
+        </form>
+    </div>
+    
+    <div class="card">
+        <h3 class="card-title" style="margin-bottom: 1.5rem;">📅 Lịch Sân Hôm Nay</h3>
+        
+        @if (Model.TodayBookings.Any())
+        {
+            var groupedBookings = Model.TodayBookings.GroupBy(b => b.Court?.Name ?? "Sân Khác");
+            
+            @foreach (var group in groupedBookings)
+            {
+                <h4 style="margin: 1rem 0; color: var(--color-primary);">@group.Key</h4>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    @foreach (var booking in group.OrderBy(b => b.StartTime))
+                    {
+                        <div style="padding: 1rem; background: var(--color-gray-50); border-radius: 8px; border-left: 4px solid var(--color-primary); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 700; font-size: 1.1rem;">
+                                    @booking.StartTime.ToString("HH:mm") - @booking.EndTime.ToString("HH:mm")
+                                </div>
+                                <div class="text-muted">@booking.Member?.FullName @(booking.Notes != null ? "📝" : "")</div>
+                            </div>
+                            <span class="status-badge status-completed">Đã Đặt</span>
+                        </div>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="empty-state" style="padding: 2rem;">
+                <p class="empty-state-text">Hôm nay chưa có lịch đặt sân nào</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

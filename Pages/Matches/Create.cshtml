@@ -1,0 +1,159 @@
+@page
+@model PickleballClubManagement.Pages.Matches.CreateModel
+@{
+    ViewData["Title"] = "Nhập Kết Quả Trận Đấu";
+}
+
+<div class="page-header">
+    <h1 class="page-title">⚖️ Nhập Kết Quả Trận Đấu (Referee)</h1>
+</div>
+
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <form method="post" id="matchForm">
+        <!-- Step 1: Format -->
+        <div class="form-group">
+            <label class="form-label">Bước 1: Chọn Loại Trận</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <label class="card" style="cursor: pointer; margin: 0;">
+                    <input type="radio" asp-for="Input.Format" value="0" checked style="margin-right: 0.5rem;" />
+                    <div style="text-align: center; padding: 1rem;">
+                        <div style="font-size: 2rem;">🎾</div>
+                        <div style="font-weight: 600;">ĐƠN</div>
+                        <div class="text-muted" style="font-size: 0.875rem;">(1 vs 1)</div>
+                    </div>
+                </label>
+                <label class="card" style="cursor: pointer; margin: 0;">
+                    <input type="radio" asp-for="Input.Format" value="1" style="margin-right: 0.5rem;" />
+                    <div style="text-align: center; padding: 1rem;">
+                        <div style="font-size: 2rem;">🎾🎾</div>
+                        <div style="font-weight: 600;">ĐÔI</div>
+                        <div class="text-muted" style="font-size: 0.875rem;">(2 vs 2)</div>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Step 2: Challenge -->
+        <div class="form-group">
+            <label class="form-label" asp-for="Input.ChallengeId">Bước 2: Kèo Liên Quan</label>
+            <select class="form-control" asp-for="Input.ChallengeId">
+                <option value="">-- Không có kèo (Đánh tự do) --</option>
+                @foreach (var challenge in Model.AcceptedChallenges)
+                {
+                    <option value="@challenge.Id">@challenge.Title (@challenge.Creator?.FullName)</option>
+                }
+            </select>
+        </div>
+
+        <!-- Step 3: Players -->
+        <div class="form-group">
+            <label class="form-label">Bước 3: Chọn Người Chơi</label>
+            <div class="match-result">
+                <div class="match-team">
+                    <h4 style="margin-bottom: 1rem;">🏆 THẮNG</h4>
+                    <div class="form-group">
+                        <select class="form-control" asp-for="Input.Winner1Id" required>
+                            <option value="">-- Chọn người chơi --</option>
+                            @foreach (var member in Model.Members)
+                            {
+                                <option value="@member.Id">@member.FullName (⭐ @member.RankLevel.ToString("F1"))</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group" id="winner2Group" style="display: none;">
+                        <select class="form-control" asp-for="Input.Winner2Id">
+                            <option value="">-- Chọn người chơi 2 --</option>
+                            @foreach (var member in Model.Members)
+                            {
+                                <option value="@member.Id">@member.FullName (⭐ @member.RankLevel.ToString("F1"))</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="vs-divider">VS</div>
+
+                <div class="match-team">
+                    <h4 style="margin-bottom: 1rem;">❌ THUA</h4>
+                    <div class="form-group">
+                        <select class="form-control" asp-for="Input.Loser1Id" required>
+                            <option value="">-- Chọn người chơi --</option>
+                            @foreach (var member in Model.Members)
+                            {
+                                <option value="@member.Id">@member.FullName (⭐ @member.RankLevel.ToString("F1"))</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group" id="loser2Group" style="display: none;">
+                        <select class="form-control" asp-for="Input.Loser2Id">
+                            <option value="">-- Chọn người chơi 2 --</option>
+                            @foreach (var member in Model.Members)
+                            {
+                                <option value="@member.Id">@member.FullName (⭐ @member.RankLevel.ToString("F1"))</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div asp-validation-summary="ModelOnly" class="text-danger mt-2"></div>
+        </div>
+
+        <!-- Step 4: Options -->
+        <div class="form-group">
+            <label class="form-label">Bước 4: Tùy Chọn</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="Input.IsRanked" checked />
+                <label class="form-label" asp-for="Input.IsRanked">
+                    ⭐ Tính điểm Rank (Thắng +0.1, Thua -0.1)
+                </label>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+            <a href="/" class="btn btn-outline">Hủy</a>
+            <button type="submit" class="btn btn-primary">💾 Lưu Kết Quả</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Show/hide player 2 fields based on format
+        const formatRadios = document.querySelectorAll('input[name="Input.Format"]');
+        const winner2Group = document.getElementById('winner2Group');
+        const loser2Group = document.getElementById('loser2Group');
+
+        function updatePlayerFields() {
+            const isSingles = document.querySelector('input[name="Input.Format"]:checked').value === '0';
+            winner2Group.style.display = isSingles ? 'none' : 'block';
+            loser2Group.style.display = isSingles ? 'none' : 'block';
+            
+            if (isSingles) {
+                document.querySelector('select[name="Input.Winner2Id"]').value = '';
+                document.querySelector('select[name="Input.Loser2Id"]').value = '';
+            }
+        }
+
+        formatRadios.forEach(radio => {
+            radio.addEventListener('change', updatePlayerFields);
+        });
+
+        // Validation: Check for duplicate players
+        document.getElementById('matchForm').addEventListener('submit', function(e) {
+            const winner1 = document.querySelector('select[name="Input.Winner1Id"]').value;
+            const winner2 = document.querySelector('select[name="Input.Winner2Id"]').value;
+            const loser1 = document.querySelector('select[name="Input.Loser1Id"]').value;
+            const loser2 = document.querySelector('select[name="Input.Loser2Id"]').value;
+
+            const players = [winner1, winner2, loser1, loser2].filter(p => p !== '');
+            const uniquePlayers = new Set(players);
+
+            if (players.length !== uniquePlayers.size) {
+                e.preventDefault();
+                alert('⚠️ Lỗi: Một người không thể vừa thắng vừa thua, hoặc xuất hiện nhiều lần!');
+                return false;
+            }
+        });
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}

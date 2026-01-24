@@ -1,0 +1,110 @@
+@page
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@model PickleballClubManagement.Pages.Challenges.CreateModel
+@{
+    ViewData["Title"] = "Tạo Kèo Mới";
+}
+
+<div class="page-header">
+    <h1 class="page-title">⚔️ Tạo Thách Đấu Mới</h1>
+</div>
+
+<div class="auth-container" style="max-width: 800px;">
+    <div class="card">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+            
+            <div class="form-group">
+                <label class="form-label">Loại Thách Đấu</label>
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <label class="radio-card" style="flex: 1; cursor: pointer;">
+                        <input type="radio" asp-for="Input.Type" value="0" checked onchange="toggleAdvancedFields(false)" style="display: none;" />
+                        <div class="card-content" style="padding: 1rem; border: 2px solid #eee; border-radius: 8px; text-align: center;">
+                            <span style="font-size: 2rem;">🥊</span>
+                            <h3>Thách Đấu Đơn (Duel)</h3>
+                            <p class="text-muted">Tìm đối thủ 1vs1 hoặc 2vs2 nhanh chóng</p>
+                        </div>
+                    </label>
+                    <label class="radio-card" style="flex: 1; cursor: pointer;">
+                        <input type="radio" asp-for="Input.Type" value="1" onchange="toggleAdvancedFields(true)" style="display: none;" />
+                        <div class="card-content" style="padding: 1rem; border: 2px solid #eee; border-radius: 8px; text-align: center;">
+                            <span style="font-size: 2rem;">🏆</span>
+                            <h3>Giải Đấu Mini (Mini-Game)</h3>
+                            <p class="text-muted">Tổ chức giải Team Battle hoặc Vòng tròn</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="Input.Title">Tiêu Đề</label>
+                <input class="form-control" asp-for="Input.Title" placeholder="Ví dụ: Kèo 500k, Chấp nửa trái..." />
+                <span asp-validation-for="Input.Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" asp-for="Input.Description">Mô Tả / Luật Chơi</label>
+                <textarea class="form-control" asp-for="Input.Description" rows="4" placeholder="Chi tiết về kèo đấu, thời gian, địa điểm..."></textarea>
+                <span asp-validation-for="Input.Description" class="text-danger"></span>
+            </div>
+
+            <!-- Advanced Fields (Hidden by default) -->
+            <div id="advancedFields" style="display: none; padding: 1.5rem; background: var(--color-gray-50); border-radius: 12px; margin-bottom: 1.5rem;">
+                <h4 style="margin-top: 0; margin-bottom: 1rem;">Cấu Hình Giải Đấu</h4>
+                
+                <div class="form-group">
+                    <label class="form-label">Thể Thức</label>
+                    <select class="form-control" asp-for="Input.GameMode">
+                        <option value="1">⚔️ Team Battle (Phe A vs Phe B)</option>
+                        <option value="2">🔄 Round Robin (Vòng Tròn)</option>
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Phí Tham Gia (Entry Fee)</label>
+                        <input class="form-control" asp-for="Input.EntryFee" type="number" step="1000" min="0" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tổng Quỹ Thưởng (Prize Pool)</label>
+                        <input class="form-control" asp-for="Input.PrizePool" type="number" step="1000" min="0" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Số Trận Thắng Để Vô Địch (Cho Team Battle)</label>
+                    <input class="form-control" asp-for="Input.TargetWins" type="number" value="3" min="1" max="10" />
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <a href="/Challenges" class="btn btn-outline">Hủy</a>
+                <button type="submit" class="btn btn-primary">🚀 Tạo Kèo</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    input[type="radio"]:checked + .card-content {
+        border-color: var(--color-primary) !important;
+        background-color: rgba(0, 168, 107, 0.05);
+        box-shadow: 0 4px 12px rgba(0, 168, 107, 0.2);
+    }
+</style>
+
+<script>
+    function toggleAdvancedFields(show) {
+        var fields = document.getElementById('advancedFields');
+        if (show) {
+            fields.style.display = 'block';
+        } else {
+            fields.style.display = 'none';
+        }
+    }
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
