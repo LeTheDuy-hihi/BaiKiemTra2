@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,31 +20,40 @@
             --light-bg: #ECF0F1;
             --dark-text: #2C3E50;
         }
-        
+
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: var(--dark-text);
         }
-        
+
         .navbar {
             background: linear-gradient(90deg, #2C3E50 0%, #34495E 100%) !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             border-bottom: 3px solid var(--secondary-color);
+            padding: 0.75rem 0 !important;
         }
-        
+
         .navbar-brand {
             font-size: 1.8rem;
             font-weight: 700;
             color: #fff !important;
-            transition: transform 0.3s;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        
+
         .navbar-brand:hover {
             transform: scale(1.05);
         }
-        
+
+        .navbar-brand i {
+            color: #667eea;
+            font-size: 2rem;
+        }
+
         .nav-link {
             color: #ecf0f1 !important;
             margin: 0 5px;
@@ -51,32 +61,32 @@
             transition: all 0.3s ease;
             font-weight: 500;
         }
-        
+
         .nav-link:hover {
             background-color: var(--secondary-color);
             color: #fff !important;
             transform: translateY(-2px);
         }
-        
+
         .main-container {
             padding: 40px 20px;
             min-height: calc(100vh - 140px);
         }
-        
+
         .card {
             background: rgba(255, 255, 255, 0.95) !important;
             border: none;
             border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             margin-bottom: 30px;
         }
-        
+
         .card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
         }
-        
+
         .btn {
             border-radius: 8px;
             font-weight: 600;
@@ -86,41 +96,41 @@
             font-size: 0.85rem;
             letter-spacing: 0.5px;
         }
-        
+
         .btn-primary {
             background: var(--secondary-color) !important;
             border-color: var(--secondary-color) !important;
         }
-        
+
         .btn-primary:hover {
             background: #c0392b !important;
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
         }
-        
+
         .btn-success {
             background: var(--success-color) !important;
         }
-        
+
         .btn-success:hover {
             background: #1e8449 !important;
             transform: scale(1.05);
         }
-        
+
         .page-title {
             color: #fff;
             font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
             margin-bottom: 30px;
             font-size: 2.5rem;
         }
-        
+
         .badge {
             padding: 8px 15px;
             border-radius: 20px;
             font-weight: 600;
         }
-        
+
         footer {
             background: linear-gradient(90deg, #2C3E50 0%, #34495E 100%);
             color: #ecf0f1;
@@ -129,7 +139,7 @@
             margin-top: 40px;
             border-top: 3px solid var(--secondary-color);
         }
-        
+
         .hero-section {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -137,97 +147,100 @@
             border-radius: 15px;
             margin-bottom: 40px;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
-        
+
         .hero-section h1 {
             font-size: 3rem;
             font-weight: 700;
             margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
-        
+
         .hero-section p {
             font-size: 1.2rem;
             margin-bottom: 20px;
             opacity: 0.95;
         }
-        
+
         .icon-box {
             text-align: center;
             padding: 30px;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
-        
+
         .icon-box:hover {
             transform: translateY(-10px);
-            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
         }
-        
+
         .icon-box i {
             font-size: 3rem;
             color: var(--secondary-color);
             margin-bottom: 15px;
         }
-        
+
         .icon-box h5 {
             color: var(--dark-text);
             font-weight: 700;
             margin-top: 15px;
         }
-        
-        .form-control, .form-select {
+
+        .form-control,
+        .form-select {
             border-radius: 8px;
             border: 2px solid #ecf0f1;
             padding: 12px 15px;
             transition: all 0.3s;
         }
-        
-        .form-control:focus, .form-select:focus {
+
+        .form-control:focus,
+        .form-select:focus {
             border-color: var(--secondary-color);
             box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.15);
         }
-        
+
         .table {
             background: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         }
-        
+
         .table thead {
             background: linear-gradient(90deg, #2C3E50 0%, #34495E 100%);
             color: white;
         }
-        
+
         .table tbody tr:hover {
             background-color: #f8f9fa;
         }
-        
+
         .user-info {
             color: #ecf0f1;
             display: flex;
             gap: 15px;
             align-items: center;
         }
-        
+
         .rank-badge {
             background: var(--success-color);
             padding: 5px 12px;
             border-radius: 20px;
             font-weight: 600;
         }
-        
+
         .alert {
             border-radius: 10px;
             border: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark">
@@ -235,7 +248,8 @@
                 <a class="navbar-brand" href="/">
                     <i class="fas fa-table-tennis"></i> Vợt Thủ Phố Núi
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
@@ -244,18 +258,25 @@
                         {
                             @if (User.IsInRole("Admin"))
                             {
-                                <li class="nav-item"><a href="/Matches/Create" class="nav-link"><i class="fas fa-chart-bar"></i> Nhập Kết Quả</a></li>
-                                <li class="nav-item"><a href="/Challenges/Manage" class="nav-link"><i class="fas fa-list"></i> Quản Lý Kèo</a></li>
-                                <li class="nav-item"><a href="/Financial/Index" class="nav-link"><i class="fas fa-money-bill"></i> Tài Chính</a></li>
+                                <li class="nav-item"><a href="/Matches/Create" class="nav-link"><i class="fas fa-chart-bar"></i>
+                                        Nhập Kết Quả</a></li>
+                                <li class="nav-item"><a href="/Challenges/Manage" class="nav-link"><i class="fas fa-list"></i>
+                                        Quản Lý Kèo</a></li>
+                                <li class="nav-item"><a href="/Financial/Index" class="nav-link"><i
+                                            class="fas fa-money-bill"></i> Tài Chính</a></li>
                             }
                             else
                             {
-                                <li class="nav-item"><a href="/Challenges" class="nav-link"><i class="fas fa-crossed-swords"></i> Tìm Kèo</a></li>
-                                <li class="nav-item"><a href="/Bookings/Create" class="nav-link"><i class="fas fa-calendar"></i> Đặt Sân</a></li>
-                                <li class="nav-item"><a href="/Matches/History" class="nav-link"><i class="fas fa-history"></i> Lịch Sử</a></li>
-                                <li class="nav-item"><a href="/Profile" class="nav-link"><i class="fas fa-user"></i> Hồ Sơ</a></li>
+                                <li class="nav-item"><a href="/Challenges" class="nav-link"><i
+                                            class="fas fa-crossed-swords"></i> Tìm Kèo</a></li>
+                                <li class="nav-item"><a href="/Bookings/Create" class="nav-link"><i class="fas fa-calendar"></i>
+                                        Đặt Sân</a></li>
+                                <li class="nav-item"><a href="/Matches/History" class="nav-link"><i class="fas fa-history"></i>
+                                        Lịch Sử</a></li>
+                                <li class="nav-item"><a href="/Profile" class="nav-link"><i class="fas fa-user"></i> Hồ Sơ</a>
+                                </li>
                             }
-                            
+
                             <li class="nav-item">
                                 <div class="user-info">
                                     <span><i class="fas fa-user-circle"></i> @User.Identity.Name</span>
@@ -266,15 +287,19 @@
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <form method="post" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index")" style="display: inline;">
-                                    <button type="submit" class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</button>
+                                <form method="post" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index")"
+                                    style="display: inline;">
+                                    <button type="submit" class="btn btn-outline-light btn-sm"><i
+                                            class="fas fa-sign-out-alt"></i> Đăng Xuất</button>
                                 </form>
                             </li>
                         }
                         else
                         {
-                            <li class="nav-item"><a href="/Account/Login" class="nav-link"><i class="fas fa-sign-in-alt"></i> Đăng Nhập</a></li>
-                            <li class="nav-item"><a href="/Account/Register" class="nav-link"><i class="fas fa-user-plus"></i> Đăng Ký</a></li>
+                            <li class="nav-item"><a href="/Account/Login" class="nav-link"><i
+                                        class="fas fa-sign-in-alt"></i> Đăng Nhập</a></li>
+                            <li class="nav-item"><a href="/Account/Register" class="nav-link"><i
+                                        class="fas fa-user-plus"></i> Đăng Ký</a></li>
                         }
                     </ul>
                 </div>
@@ -290,12 +315,15 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2025 Vợt Thủ Phố Núi. All rights reserved. | Designed with <i class="fas fa-heart" style="color: #E74C3C;"></i> for passionate players</p>
+            <p>&copy; 2025 Vợt Thủ Phố Núi. All rights reserved. | Designed with <i class="fas fa-heart"
+                    style="color: #E74C3C;"></i> for passionate players</p>
         </div>
     </footer>
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)</body>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
 </html>

@@ -13,7 +13,7 @@
         padding: 30px;
         border-radius: 15px;
         margin-bottom: 40px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -35,14 +35,14 @@
         background: white;
         border-radius: 15px;
         padding: 25px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         border-left: 5px solid;
         transition: all 0.3s ease;
     }
 
     .stat-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
     }
 
     .stat-card.income {
@@ -93,7 +93,7 @@
         background: white;
         border-radius: 15px;
         padding: 30px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     }
 
     .section-title {
@@ -230,8 +230,15 @@
     }
 
     @@keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.7;
+        }
     }
 </style>
 
@@ -264,7 +271,7 @@
 
 <div class="transactions-section">
     <h2 class="section-title"><i class="fas fa-history"></i> Lịch Sử Giao Dịch</h2>
-    
+
     @if (Model.Transactions.Any())
     {
         <div class="table-responsive">
@@ -284,12 +291,14 @@
                             <td class="transaction-date">@tran.Date.ToString("dd/MM/yyyy")</td>
                             <td class="transaction-desc">@tran.Description</td>
                             <td>
-                                <span class="category-badge @(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "category-income" : "category-expense")">
+                                <span
+                                    class="category-badge @(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "category-income" : "category-expense")">
                                     @tran.Category?.Name
                                 </span>
                             </td>
                             <td style="text-align: right;">
-                                <span class="@(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "amount-income" : "amount-expense")">
+                                <span
+                                    class="@(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "amount-income" : "amount-expense")">
                                     @(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "+" : "-")
                                     @tran.Amount.ToString("N0") đ
                                 </span>

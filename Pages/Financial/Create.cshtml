@@ -16,7 +16,7 @@
         background: white;
         border-radius: 15px;
         padding: 40px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
 
     .form-header {
@@ -175,19 +175,21 @@
 
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="alert-error"></div>
-            
+
             <div class="form-group">
                 <label class="form-label">🏷️ Loại Giao Dịch</label>
                 <select class="form-control" asp-for="Input.CategoryId">
                     <option value="">-- Chọn danh mục --</option>
                     <optgroup label="🔴 Khoản Chi">
-                        @foreach (var cat in Model.Categories.Where(c => c.Type == PickleballClubManagement.Models.TransactionType.Expense))
+                        @foreach (var cat in Model.Categories.Where(c => c.Type ==
+                                                PickleballClubManagement.Models.TransactionType.Expense))
                         {
                             <option value="@cat.Id">@cat.Name</option>
                         }
                     </optgroup>
                     <optgroup label="🟢 Khoản Thu">
-                        @foreach (var cat in Model.Categories.Where(c => c.Type == PickleballClubManagement.Models.TransactionType.Income))
+                        @foreach (var cat in Model.Categories.Where(c => c.Type ==
+                                                PickleballClubManagement.Models.TransactionType.Income))
                         {
                             <option value="@cat.Id">@cat.Name</option>
                         }
@@ -198,10 +200,11 @@
 
             <div class="form-group">
                 <label class="form-label">💵 Số Tiền (VNĐ)</label>
-                <input class="form-control" asp-for="Input.Amount" type="number" step="1000" min="0" placeholder="Nhập số tiền..." />
+                <input class="form-control" asp-for="Input.Amount" type="number" step="1000" min="0"
+                    placeholder="Nhập số tiền..." />
                 <span asp-validation-for="Input.Amount" class="validation-error"></span>
             </div>
-            
+
             <div class="form-group">
                 <label class="form-label">📅 Ngày Giao Dịch</label>
                 <input class="form-control" asp-for="Input.Date" type="date" />
@@ -210,7 +213,8 @@
 
             <div class="form-group">
                 <label class="form-label">📝 Mô Tả Chi Tiết</label>
-                <textarea class="form-control" asp-for="Input.Description" placeholder="Ví dụ: Mua 10 hộp bóng, Thu tiền sân từ nhóm anh A..."></textarea>
+                <textarea class="form-control" asp-for="Input.Description"
+                    placeholder="Ví dụ: Mua 10 hộp bóng, Thu tiền sân từ nhóm anh A..."></textarea>
                 <span asp-validation-for="Input.Description" class="validation-error"></span>
             </div>
 
