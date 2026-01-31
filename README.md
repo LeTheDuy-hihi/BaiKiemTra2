@@ -146,13 +146,4 @@ dotnet publish --configuration Release --output ./publish
 # Chạy migrations trên server
 ```
 
-## Liên hệ
-
-- **Sinh viên**: Lễ Thế Duy (1871020186)
-- **Email**: theduyle@example.com
-
----
-
-**Cập nhật**: 31/01/2026  
-**Phiên bản**: 1.0.0  
-**Framework**: .NET 10.0
+ 
