@@ -47,11 +47,18 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-// Seed database with admin account
-using (var scope = app.Services.CreateScope())
+// Seed database with admin account - Try catch to handle DB connection issues
+try
 {
-    var services = scope.ServiceProvider;
-    await DbSeeder.SeedAsync(services);
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        await DbSeeder.SeedAsync(services);
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Database seeding failed: {ex.Message}. Continuing without seeding...");
 }
 
 app.Run();

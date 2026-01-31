@@ -6,17 +6,178 @@
     ViewData["Title"] = "Ghi Nhận Giao Dịch";
 }
 
-<div class="page-header">
-    <h1 class="page-title">💳 Ghi Nhận Thu/Chi Mới</h1>
-</div>
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
 
-<div class="auth-container" style="max-width: 600px;">
-    <div class="card">
+    .form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .form-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2C3E50;
+        margin-bottom: 10px;
+    }
+
+    .form-subtitle {
+        color: #7F8C8D;
+        font-size: 0.95rem;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #2C3E50;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #ECF0F1;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+        background-color: #F8F9FA;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #E74C3C;
+        background-color: white;
+        box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.1);
+    }
+
+    .form-control option {
+        padding: 10px;
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .form-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .btn-submit {
+        flex: 1;
+        background: linear-gradient(135deg, #27AE60 0%, #229954 100%);
+        color: white;
+        border: none;
+        padding: 14px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(39, 174, 96, 0.3);
+    }
+
+    .btn-cancel {
+        flex: 1;
+        background: #ECF0F1;
+        color: #2C3E50;
+        border: none;
+        padding: 14px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-cancel:hover {
+        background: #BDC3C7;
+        color: white;
+    }
+
+    .validation-error {
+        color: #E74C3C;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: block;
+        font-weight: 500;
+    }
+
+    .alert-error {
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(192, 57, 43, 0.1) 100%);
+        border: 2px solid #E74C3C;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: #C0392B;
+        font-weight: 600;
+    }
+
+    .input-icon {
+        position: relative;
+    }
+
+    .input-icon::before {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1rem;
+    }
+
+    select.form-control {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%232C3E50' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 35px;
+    }
+</style>
+
+<div class="form-container">
+    <div class="form-card">
+        <div class="form-header">
+            <div class="form-title">💳 Ghi Nhận Giao Dịch Mới</div>
+            <div class="form-subtitle">Quản lý thu chi của câu lạc bộ</div>
+        </div>
+
         <form method="post">
-            <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+            <div asp-validation-summary="ModelOnly" class="alert-error"></div>
             
             <div class="form-group">
-                <label class="form-label">Loại Giao Dịch (Danh Mục)</label>
+                <label class="form-label">🏷️ Loại Giao Dịch</label>
                 <select class="form-control" asp-for="Input.CategoryId">
                     <option value="">-- Chọn danh mục --</option>
                     <optgroup label="🔴 Khoản Chi">
@@ -32,30 +193,30 @@
                         }
                     </optgroup>
                 </select>
-                <span asp-validation-for="Input.CategoryId" class="text-danger"></span>
+                <span asp-validation-for="Input.CategoryId" class="validation-error"></span>
             </div>
 
             <div class="form-group">
-                <label class="form-label">Số Tiền (VNĐ)</label>
-                <input class="form-control" asp-for="Input.Amount" type="number" step="1000" min="0" placeholder="0" />
-                <span asp-validation-for="Input.Amount" class="text-danger"></span>
+                <label class="form-label">💵 Số Tiền (VNĐ)</label>
+                <input class="form-control" asp-for="Input.Amount" type="number" step="1000" min="0" placeholder="Nhập số tiền..." />
+                <span asp-validation-for="Input.Amount" class="validation-error"></span>
             </div>
             
             <div class="form-group">
-                <label class="form-label">Ngày Giao Dịch</label>
+                <label class="form-label">📅 Ngày Giao Dịch</label>
                 <input class="form-control" asp-for="Input.Date" type="date" />
-                <span asp-validation-for="Input.Date" class="text-danger"></span>
+                <span asp-validation-for="Input.Date" class="validation-error"></span>
             </div>
 
             <div class="form-group">
-                <label class="form-label">Mô Tả Chi Tiết</label>
-                <textarea class="form-control" asp-for="Input.Description" rows="3" placeholder="Ví dụ: Mua 10 hộp bóng, Thu tiền sân nhóm anh A..."></textarea>
-                <span asp-validation-for="Input.Description" class="text-danger"></span>
+                <label class="form-label">📝 Mô Tả Chi Tiết</label>
+                <textarea class="form-control" asp-for="Input.Description" placeholder="Ví dụ: Mua 10 hộp bóng, Thu tiền sân từ nhóm anh A..."></textarea>
+                <span asp-validation-for="Input.Description" class="validation-error"></span>
             </div>
 
-            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                <a href="/Financial/Index" class="btn btn-secondary">Hủy</a>
-                <button type="submit" class="btn btn-primary" style="flex: 1;">💾 Lưu Giao Dịch</button>
+            <div class="form-buttons">
+                <a href="/Financial/Index" class="btn-cancel">❌ Hủy</a>
+                <button type="submit" class="btn-submit">✅ Lưu Giao Dịch</button>
             </div>
         </form>
     </div>

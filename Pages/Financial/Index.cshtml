@@ -6,63 +6,293 @@
     ViewData["Title"] = "Quản Lý Tài Chính";
 }
 
-<div class="page-header">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h1 class="page-title">💰 Quản Lý Thu Chi</h1>
-        <a href="/Financial/Create" class="btn btn-primary">➕ Ghi Nhận Giao Dịch</a>
-    </div>
+<style>
+    .financial-header {
+        background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .financial-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+
+    .stat-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        border-left: 5px solid;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    }
+
+    .stat-card.income {
+        border-left-color: #27AE60;
+    }
+
+    .stat-card.expense {
+        border-left-color: #E74C3C;
+    }
+
+    .stat-card.balance {
+        border-left-color: #3498DB;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: #7F8C8D;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 900;
+        margin-bottom: 5px;
+    }
+
+    .stat-card.income .stat-value {
+        color: #27AE60;
+    }
+
+    .stat-card.expense .stat-value {
+        color: #E74C3C;
+    }
+
+    .stat-card.balance .stat-value {
+        color: #3498DB;
+    }
+
+    .stat-subtitle {
+        font-size: 0.85rem;
+        color: #BDC3C7;
+    }
+
+    .transactions-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2C3E50;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .transactions-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .transactions-table thead {
+        background: linear-gradient(135deg, #34495E 0%, #2C3E50 100%);
+        color: white;
+    }
+
+    .transactions-table th {
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+
+    .transactions-table tbody tr {
+        border-bottom: 1px solid #ECF0F1;
+        transition: all 0.2s ease;
+    }
+
+    .transactions-table tbody tr:hover {
+        background-color: #F8F9FA;
+    }
+
+    .transactions-table td {
+        padding: 15px;
+        vertical-align: middle;
+    }
+
+    .transaction-date {
+        font-weight: 600;
+        color: #2C3E50;
+    }
+
+    .transaction-desc {
+        color: #34495E;
+    }
+
+    .category-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .category-income {
+        background-color: rgba(39, 174, 96, 0.15);
+        color: #27AE60;
+    }
+
+    .category-expense {
+        background-color: rgba(231, 76, 60, 0.15);
+        color: #E74C3C;
+    }
+
+    .amount-income {
+        color: #27AE60;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    .amount-expense {
+        color: #E74C3C;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    .warning-box {
+        background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 10px;
+        text-align: center;
+        font-weight: 600;
+        animation: pulse 1.5s infinite;
+    }
+
+    .empty-state-container {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty-icon {
+        font-size: 5rem;
+        margin-bottom: 20px;
+    }
+
+    .empty-text {
+        font-size: 1.2rem;
+        color: #7F8C8D;
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-add:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+        color: white;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+</style>
+
+<div class="financial-header">
+    <h1 class="financial-title">💰 Quản Lý Tài Chính CLB</h1>
+    <a href="/Financial/Create" class="btn-add"><i class="fas fa-plus-circle"></i> Ghi Nhận Giao Dịch</a>
 </div>
 
-<div class="grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem;">
-    <div class="card" style="text-align: center;">
-        <div style="font-size: 2rem; font-weight: 900; color: #00A86B;">@Model.TotalIncome.ToString("N0") đ</div>
-        <div class="text-muted">Tổng Thu</div>
+<div class="stat-cards">
+    <div class="stat-card income">
+        <div class="stat-label"><i class="fas fa-arrow-up"></i> Tổng Thu Nhập</div>
+        <div class="stat-value">@Model.TotalIncome.ToString("N0")</div>
+        <div class="stat-subtitle">VND</div>
     </div>
-    <div class="card" style="text-align: center;">
-        <div style="font-size: 2rem; font-weight: 900; color: #FF6B35;">@Model.TotalExpense.ToString("N0") đ</div>
-        <div class="text-muted">Tổng Chi</div>
+    <div class="stat-card expense">
+        <div class="stat-label"><i class="fas fa-arrow-down"></i> Tổng Chi Phí</div>
+        <div class="stat-value">@Model.TotalExpense.ToString("N0")</div>
+        <div class="stat-subtitle">VND</div>
     </div>
-    <div class="card" style="text-align: center; border: 2px solid @(Model.CurrentBalance < 0 ? "red" : "#0077BE");">
-        <div style="font-size: 2rem; font-weight: 900; color: @(Model.CurrentBalance < 0 ? "red" : "#0077BE");">
-            @Model.CurrentBalance.ToString("N0") đ
-        </div>
-        <div class="text-muted">Số Dư Quỹ</div>
+    <div class="stat-card balance">
+        <div class="stat-label"><i class="fas fa-wallet"></i> Số Dư Quỹ</div>
+        <div class="stat-value">@Model.CurrentBalance.ToString("N0")</div>
+        <div class="stat-subtitle">VND</div>
         @if (Model.CurrentBalance < 0)
         {
-            <div style="color: red; font-weight: bold; margin-top: 0.5rem; animation: pulse 1s infinite;">⚠️ CẢNH BÁO: QUỸ ÂM!</div>
+            <div class="warning-box">⚠️ CẢNH BÁO: QUỸ ÂM!</div>
         }
     </div>
 </div>
 
-<div class="card">
-    <h3 class="card-title">📜 Lịch Sử Giao Dịch</h3>
+<div class="transactions-section">
+    <h2 class="section-title"><i class="fas fa-history"></i> Lịch Sử Giao Dịch</h2>
     
     @if (Model.Transactions.Any())
     {
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse;">
+        <div class="table-responsive">
+            <table class="transactions-table">
                 <thead>
-                    <tr style="border-bottom: 2px solid #eee; text-align: left;">
-                        <th style="padding: 1rem;">Ngày</th>
-                        <th style="padding: 1rem;">Nội Dung</th>
-                        <th style="padding: 1rem;">Danh Mục</th>
-                        <th style="padding: 1rem; text-align: right;">Số Tiền</th>
+                    <tr>
+                        <th>📅 Ngày Giao Dịch</th>
+                        <th>📝 Nội Dung</th>
+                        <th>🏷️ Danh Mục</th>
+                        <th style="text-align: right;">💵 Số Tiền</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var tran in Model.Transactions)
+                    @foreach (var tran in Model.Transactions.OrderByDescending(t => t.Date))
                     {
-                        <tr style="border-bottom: 1px solid #eee;">
-                            <td style="padding: 1rem;">@tran.Date.ToString("dd/MM/yyyy")</td>
-                            <td style="padding: 1rem;">@tran.Description</td>
-                            <td style="padding: 1rem;">
-                                <span class="status-badge @(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "status-accepted" : "status-completed")">
+                        <tr>
+                            <td class="transaction-date">@tran.Date.ToString("dd/MM/yyyy")</td>
+                            <td class="transaction-desc">@tran.Description</td>
+                            <td>
+                                <span class="category-badge @(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "category-income" : "category-expense")">
                                     @tran.Category?.Name
                                 </span>
                             </td>
-                            <td style="padding: 1rem; text-align: right; font-weight: 700; color: @(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "#00A86B" : "#FF6B35");">
-                                @(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "+" : "-")
-                                @tran.Amount.ToString("N0") đ
+                            <td style="text-align: right;">
+                                <span class="@(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "amount-income" : "amount-expense")">
+                                    @(tran.Category?.Type == PickleballClubManagement.Models.TransactionType.Income ? "+" : "-")
+                                    @tran.Amount.ToString("N0") đ
+                                </span>
                             </td>
                         </tr>
                     }
@@ -72,17 +302,9 @@
     }
     else
     {
-        <div class="empty-state">
-            <div class="empty-state-icon">💸</div>
-            <p class="empty-state-text">Chưa có giao dịch nào</p>
+        <div class="empty-state-container">
+            <div class="empty-icon">💸</div>
+            <p class="empty-text">Chưa có giao dịch nào được ghi nhận</p>
         </div>
     }
 </div>
-
-<style>
-    @@keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
-    }
-</style>

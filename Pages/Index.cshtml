@@ -4,237 +4,145 @@
     ViewData["Title"] = "Trang Chủ";
 }
 
-<style>
-    .hero-section {
-        background: var(--gradient-hero);
-        border-radius: var(--radius-xl);
-        padding: 5rem 3rem;
-        text-align: center;
-        color: var(--color-white);
-        margin-bottom: 4rem;
-        box-shadow: var(--shadow-xl);
-        position: relative;
-        overflow: hidden;
-        border: 1px solid var(--color-gray-800);
+<div class="hero-section text-white text-center py-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4">
+            <i class="fas fa-table-tennis"></i> Chào Mừng Đến Với Vợt Thủ Phố Núi
+        </h1>
+        <p class="lead fs-5 mb-4">Nền tảng quản lý sân pickleball hàng đầu - Tìm kèo, đặt sân, quản lý tài chính</p>
+        
+        @if (!User.Identity?.IsAuthenticated == true)
+        {
+            <div>
+                <a href="/Account/Register" class="btn btn-light btn-lg me-3 mb-3">
+                    <i class="fas fa-user-plus"></i> Đăng Ký Ngay
+                </a>
+                <a href="/Account/Login" class="btn btn-outline-light btn-lg mb-3">
+                    <i class="fas fa-sign-in-alt"></i> Đăng Nhập
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="icon-box">
+                <i class="fas fa-search-plus"></i>
+                <h5>Tìm Kèo</h5>
+                <p class="text-muted">Tìm kiếm các cuộc thi đấu phù hợp với bạn</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="icon-box">
+                <i class="fas fa-calendar-alt"></i>
+                <h5>Đặt Sân</h5>
+                <p class="text-muted">Đặt sân pickleball dễ dàng và nhanh chóng</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="icon-box">
+                <i class="fas fa-chart-line"></i>
+                <h5>Thống Kê</h5>
+                <p class="text-muted">Theo dõi thành tích và xếp hạng của bạn</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="icon-box">
+                <i class="fas fa-wallet"></i>
+                <h5>Quản Lý Tài Chính</h5>
+                <p class="text-muted">Quản lý chi phí và thanh toán dễ dàng</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <div class="container">
+        <div class="row g-4">
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0">
+                        <div class="card-body text-center">
+                            <i class="fas fa-chart-bar text-danger" style="font-size: 3rem;"></i>
+                            <h5 class="card-title mt-3">Nhập Kết Quả</h5>
+                            <p class="card-text text-muted">Cập nhật kết quả các trận đấu</p>
+                            <a href="/Matches/Create" class="btn btn-primary">Vào Trang</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0">
+                        <div class="card-body text-center">
+                            <i class="fas fa-list text-info" style="font-size: 3rem;"></i>
+                            <h5 class="card-title mt-3">Quản Lý Kèo</h5>
+                            <p class="card-text text-muted">Quản lý các cuộc thi đấu</p>
+                            <a href="/Challenges/Manage" class="btn btn-primary">Vào Trang</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0">
+                        <div class="card-body text-center">
+                            <i class="fas fa-money-bill text-success" style="font-size: 3rem;"></i>
+                            <h5 class="card-title mt-3">Tài Chính</h5>
+                            <p class="card-text text-muted">Quản lý doanh thu và chi phí</p>
+                            <a href="/Financial/Index" class="btn btn-primary">Vào Trang</a>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-6 col-lg-3">
+                    <div class="card border-0">
+                        <div class="card-body text-center">
+                            <i class="fas fa-crossed-swords text-warning" style="font-size: 3rem;"></i>
+                            <h5 class="card-title mt-3">Tìm Kèo</h5>
+                            <p class="card-text text-muted">Tìm đối thủ phù hợp</p>
+                            <a href="/Challenges" class="btn btn-primary">Khám Phá</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card border-0">
+                        <div class="card-body text-center">
+                            <i class="fas fa-calendar-check text-info" style="font-size: 3rem;"></i>
+                            <h5 class="card-title mt-3">Đặt Sân</h5>
+                            <p class="card-text text-muted">Đặt sân ngay</p>
+                            <a href="/Bookings/Create" class="btn btn-primary">Đặt Ngay</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card border-0">
+                        <div class="card-body text-center">
+                            <i class="fas fa-history text-secondary" style="font-size: 3rem;"></i>
+                            <h5 class="card-title mt-3">Lịch Sử</h5>
+                            <p class="card-text text-muted">Xem lịch sử trận đấu</p>
+                            <a href="/Matches/History" class="btn btn-primary">Xem Lịch Sử</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="card border-0">
+                        <div class="card-body text-center">
+                            <i class="fas fa-user-tie text-success" style="font-size: 3rem;"></i>
+                            <h5 class="card-title mt-3">Hồ Sơ</h5>
+                            <p class="card-text text-muted">Xem hồ sơ cá nhân</p>
+                            <a href="/Profile" class="btn btn-primary">Xem Hồ Sơ</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
     }
 
-    .hero-section::before {
-        content: '🎾';
-        position: absolute;
-        font-size: 20rem;
-        opacity: 0.05;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(-15deg);
-    }
-
-    .hero-title {
-        font-size: 4rem;
-        font-weight: 900;
-        margin-bottom: 1.5rem;
-        text-transform: uppercase;
-        letter-spacing: 4px;
-        text-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
-        position: relative;
-        z-index: 1;
-        background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .hero-subtitle {
-        font-size: 1.8rem;
-        margin-bottom: 3rem;
-        opacity: 0.9;
-        position: relative;
-        z-index: 1;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 2rem;
-        margin-bottom: 4rem;
-    }
-
-    .stat-card {
-        background: var(--gradient-card);
-        border-radius: var(--radius-lg);
-        padding: 2.5rem;
-        text-align: center;
-        box-shadow: var(--shadow-lg);
-        border: 1px solid var(--color-gray-700);
-        transition: var(--transition-base);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: var(--gradient-accent);
-    }
-
-    .stat-card:hover {
-        transform: translateY(-8px);
-        box-shadow: var(--shadow-xl);
-        border-color: var(--color-accent);
-    }
-
-    .stat-number {
-        font-size: 3.5rem;
-        font-weight: 900;
-        color: var(--color-accent);
-        margin-bottom: 1rem;
-        text-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
-    }
-
-    .stat-label {
-        font-size: 1.2rem;
-        color: var(--color-gray-300);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 2rem;
-        margin-bottom: 4rem;
-    }
-
-    .feature-card {
-        background: var(--gradient-card);
-        border-radius: var(--radius-lg);
-        padding: 3rem 2rem;
-        box-shadow: var(--shadow-md);
-        border: 1px solid var(--color-gray-700);
-        transition: var(--transition-base);
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .feature-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: var(--gradient-primary);
-    }
-
-    .feature-card:hover {
-        transform: translateY(-12px) scale(1.02);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--color-primary-light);
-    }
-
-    .feature-icon {
-        font-size: 4rem;
-        margin-bottom: 1.5rem;
-        display: block;
-        filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.3));
-    }
-
-    .feature-title {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: var(--color-white);
-        margin-bottom: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .feature-description {
-        color: var(--color-gray-400);
-        margin-bottom: 2rem;
-        line-height: 1.7;
-        font-size: 1.1rem;
-    }
-
-    .cta-button {
-        background: var(--gradient-accent);
-        color: var(--color-white);
-        padding: 1.2rem 2.5rem;
-        border-radius: var(--radius-md);
-        text-decoration: none;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        display: inline-block;
-        transition: var(--transition-base);
-        box-shadow: 0 4px 16px rgba(6, 182, 212, 0.3);
-        border: 2px solid transparent;
-    }
-
-    .cta-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 24px rgba(6, 182, 212, 0.5);
-        border-color: var(--color-accent-light);
-        color: var(--color-white);
-    }
-
-    .welcome-section {
-        background: var(--gradient-card);
-        border-radius: var(--radius-lg);
-        padding: 3rem;
-        text-align: center;
-        margin-bottom: 4rem;
-        border: 1px solid var(--color-gray-700);
-    }
-
-    .welcome-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: var(--color-white);
-        margin-bottom: 1rem;
-    }
-
-    .welcome-text {
-        font-size: 1.2rem;
-        color: var(--color-gray-400);
-        max-width: 600px;
-        margin: 0 auto;
-        line-height: 1.7;
-    }
-
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-    }
-
-    .empty-state {
-        text-align: center;
-        padding: 4rem 2rem;
-        background: var(--gradient-card);
-        border-radius: var(--radius-lg);
-        border: 1px solid var(--color-gray-700);
-    }
-
-    .empty-state-icon {
-        font-size: 5rem;
-        margin-bottom: 2rem;
-        opacity: 0.7;
-    }
-
-    .empty-state-text {
-        font-size: 1.3rem;
-        color: var(--color-gray-400);
-        max-width: 500px;
-        margin: 0 auto;
-    }
 </style>
 
 @if (User.Identity?.IsAuthenticated == true)
