@@ -20,7 +20,7 @@ namespace PickleballClubManagement.Services
                 b.CourtId == courtId &&
                 b.Status != BookingStatus.Cancelled &&
                 startTime < b.EndTime && endTime > b.StartTime);
-            
+
             return !hasOverlap;
         }
 

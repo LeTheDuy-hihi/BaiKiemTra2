@@ -79,9 +79,9 @@ namespace PickleballClubManagement.Services
         {
             // Kiểm tra xem có booking nào trùng lịch không
             var conflictingBooking = await _context.Bookings
-                .Where(b => b.CourtId == courtId 
+                .Where(b => b.CourtId == courtId
                     && b.Status != BookingStatus.Cancelled
-                    && b.StartTime < endTime 
+                    && b.StartTime < endTime
                     && b.EndTime > startTime)
                 .FirstOrDefaultAsync();
 
@@ -95,8 +95,8 @@ namespace PickleballClubManagement.Services
 
             return await _context.Bookings
                 .Include(b => b.Member)
-                .Where(b => b.CourtId == courtId 
-                    && b.StartTime >= startOfDay 
+                .Where(b => b.CourtId == courtId
+                    && b.StartTime >= startOfDay
                     && b.StartTime < endOfDay
                     && b.Status != BookingStatus.Cancelled)
                 .OrderBy(b => b.StartTime)

@@ -261,7 +261,7 @@ namespace PickleballClubManagement.Services
                     }
                 );
                 await context.SaveChangesAsync();
-                
+
                 // 4. Seed Mini-Game Challenge (Team Battle)
                 var members = await context.Members.ToListAsync();
                 if (members.Count >= 6)
@@ -282,13 +282,13 @@ namespace PickleballClubManagement.Services
                         CreatedAt = DateTime.Now.AddDays(-2),
                         StartDate = DateTime.Now.AddDays(-2)
                     };
-                    
+
                     context.Challenges.Add(miniGame);
                     await context.SaveChangesAsync();
 
                     // Add Participants
                     var participants = new List<Participant>();
-                    
+
                     // Team A (Rank cao)
                     participants.Add(new Participant { ChallengeId = miniGame.Id, MemberId = members[1].Id, Team = TeamName.TeamA, Status = ParticipantStatus.Confirmed, EntryFeePaid = true, EntryFeeAmount = 50000 });
                     participants.Add(new Participant { ChallengeId = miniGame.Id, MemberId = members[2].Id, Team = TeamName.TeamA, Status = ParticipantStatus.Confirmed, EntryFeePaid = true, EntryFeeAmount = 50000 });

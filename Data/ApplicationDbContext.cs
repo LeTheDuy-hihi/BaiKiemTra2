@@ -15,7 +15,7 @@ namespace PickleballClubManagement.Data
         public DbSet<Challenge> Challenges { get; set; }
         public DbSet<Match> Matches { get; set; }
         public DbSet<Booking> Bookings { get; set; }
-        
+
         // Advanced Tables
         public DbSet<News> News { get; set; }
         public DbSet<Court> Courts { get; set; }
@@ -35,7 +35,7 @@ namespace PickleballClubManagement.Data
             builder.Entity<Challenge>().ToTable("186_Challenges");
             builder.Entity<Match>().ToTable("186_Matches");
             builder.Entity<Booking>().ToTable("186_Bookings");
-            
+
             // Advanced Tables Configuration
             builder.Entity<News>().ToTable("186_News");
             builder.Entity<Court>().ToTable("186_Courts");
