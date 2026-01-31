@@ -1,7 +1,7 @@
 # Pickleball Club Management System
 
 **Thông tin dự án**
-- **Sinh viên**: Lễ Thế Duy
+- **Sinh viên**: Lê Thế Duy
 - **MSV**: 1871020186
 - **Năm học**: 2025-2026
 

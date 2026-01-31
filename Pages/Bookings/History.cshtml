@@ -1,0 +1,151 @@
+@page
+@model PickleballClubManagement.Pages.Bookings.HistoryModel
+@{
+    ViewData["Title"] = "Lịch Sử Đặt Sân";
+}
+
+<div class="page-header">
+    <h1 class="page-title">📅 Lịch Sử Đặt Sân Đấu</h1>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+    <a href="@Url.Page("History", new { status = "all" })" 
+       class="btn @(Model.FilterStatus == "all" ? "btn-primary" : "btn-outline")">
+        📋 Tất Cả
+    </a>
+    <a href="@Url.Page("History", new { status = "Confirmed" })" 
+       class="btn @(Model.FilterStatus == "Confirmed" ? "btn-primary" : "btn-outline")">
+        ✅ Đã Xác Nhận
+    </a>
+    <a href="@Url.Page("History", new { status = "Pending" })" 
+       class="btn @(Model.FilterStatus == "Pending" ? "btn-primary" : "btn-outline")">
+        ⏳ Chờ Xử Lý
+    </a>
+    <a href="@Url.Page("History", new { status = "Cancelled" })" 
+       class="btn @(Model.FilterStatus == "Cancelled" ? "btn-primary" : "btn-outline")">
+        ❌ Đã Hủy
+    </a>
+</div>
+
+@if (Model.Bookings.Any())
+{
+    <div class="grid" style="grid-template-columns: 1fr;">
+        @foreach (var booking in Model.Bookings)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            @if (booking.Status == BookingStatus.Confirmed)
+                            {
+                                <span class="status-badge status-completed">✅ ĐÃ XÁC NHẬN</span>
+                            }
+                            else if (booking.Status == BookingStatus.Pending)
+                            {
+                                <span class="status-badge status-open">⏳ CHỜ XỬ LÝ</span>
+                            }
+                            else if (booking.Status == BookingStatus.Cancelled)
+                            {
+                                <span class="status-badge status-cancelled">❌ ĐÃ HỦY</span>
+                            }
+                        </div>
+                        <span class="text-muted" style="font-size: 0.875rem;">
+                            Tạo: @booking.CreatedDate.ToString("dd/MM/yyyy HH:mm")
+                        </span>
+                    </div>
+                </div>
+
+                <div style="padding: 1rem 0;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <div style="color: var(--color-gray-700); font-size: 0.875rem; margin-bottom: 0.25rem;">
+                                Sân Đấu
+                            </div>
+                            <div style="font-weight: 600; font-size: 1.125rem;">
+                                🏸 @(booking.Court?.Name ?? "Không xác định")
+                            </div>
+                        </div>
+                        <div>
+                            <div style="color: var(--color-gray-700); font-size: 0.875rem; margin-bottom: 0.25rem;">
+                                Ngày Đặt
+                            </div>
+                            <div style="font-weight: 600; font-size: 1.125rem;">
+                                📆 @booking.StartTime.ToString("dd/MM/yyyy")
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <div style="color: var(--color-gray-700); font-size: 0.875rem; margin-bottom: 0.25rem;">
+                                Thời Gian Bắt Đầu
+                            </div>
+                            <div style="font-weight: 600;">
+                                🕐 @booking.StartTime.ToString("HH:mm")
+                            </div>
+                        </div>
+                        <div>
+                            <div style="color: var(--color-gray-700); font-size: 0.875rem; margin-bottom: 0.25rem;">
+                                Thời Gian Kết Thúc
+                            </div>
+                            <div style="font-weight: 600;">
+                                🕐 @booking.EndTime.ToString("HH:mm")
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(booking.Notes))
+                    {
+                        <div>
+                            <div style="color: var(--color-gray-700); font-size: 0.875rem; margin-bottom: 0.25rem;">
+                                Ghi Chú
+                            </div>
+                            <div style="padding: 0.5rem; background-color: var(--color-gray-100); border-radius: 0.25rem; font-size: 0.875rem;">
+                                📝 @booking.Notes
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="card-footer" style="justify-content: space-between;">
+                    <div style="display: flex; gap: 0.5rem;">
+                        @{
+                            var duration = booking.EndTime - booking.StartTime;
+                            var hours = (int)duration.TotalHours;
+                            var minutes = duration.Minutes;
+                            var durationStr = hours > 0 ? $"{hours}h {minutes}m" : $"{minutes}m";
+                        }
+                        <span class="status-badge" style="background-color: var(--color-blue-100); color: var(--color-blue-700);">
+                            ⏱️ @durationStr
+                        </span>
+                    </div>
+                    @if (booking.Status == BookingStatus.Confirmed)
+                    {
+                        <a href="@Url.Page("Create")" class="btn btn-outline" style="font-size: 0.875rem;">
+                            ➕ Đặt Sân Khác
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="card" style="text-align: center; padding: 3rem 1rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+        <p style="color: var(--color-gray-700); margin: 0;">
+            Bạn chưa có lịch sử đặt sân nào
+        </p>
+        <a href="@Url.Page("Create")" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">
+            ➕ Đặt Sân Ngay
+        </a>
+    </div>
+}

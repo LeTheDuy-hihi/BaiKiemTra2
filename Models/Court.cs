@@ -1,9 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PickleballClubManagement.Models
 {
+    [Table("186_Courts")]
     public class Court
     {
+        [Key]
         public int Id { get; set; }
         
         [Required]
@@ -14,5 +17,8 @@ namespace PickleballClubManagement.Models
         
         [StringLength(500)]
         public string? Description { get; set; }
+
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime? ModifiedDate { get; set; }
     }
 }

@@ -7,14 +7,23 @@ namespace PickleballClubManagement.Services
     public class MatchService : IMatchService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IRankService _rankService;
 
-        public MatchService(ApplicationDbContext context)
+        public MatchService(ApplicationDbContext context, IRankService rankService)
         {
             _context = context;
+            _rankService = rankService;
         }
 
         public async Task<Match> CreateMatchAsync(int? challengeId, MatchFormat format, int winner1Id, int? winner2Id, int loser1Id, int? loser2Id, bool isRanked)
         {
+            // Validation
+            if (format == MatchFormat.Doubles && (!winner2Id.HasValue || !loser2Id.HasValue))
+                throw new ArgumentException("Doubles match phải có đủ 4 người chơi");
+
+            if (winner1Id == loser1Id || (winner2Id.HasValue && winner2Id == loser2Id))
+                throw new ArgumentException("Không được chọn cùng một người hai lần");
+
             // Create match
             var match = new Match
             {
@@ -25,57 +34,39 @@ namespace PickleballClubManagement.Services
                 Loser1Id = loser1Id,
                 Loser2Id = loser2Id,
                 IsRanked = isRanked,
-                MatchDate = DateTime.Now
+                MatchDate = DateTime.Now,
+                WinningSide = WinningSide.Team1
             };
 
             _context.Matches.Add(match);
             await _context.SaveChangesAsync();
 
-            // If match is linked to a challenge, update challenge status to Completed
+            // Update rankings if match is ranked
+            if (isRanked)
+            {
+                await _rankService.UpdateRankAfterMatchAsync(match);
+            }
+
+            // If match is linked to a challenge, update challenge
             if (challengeId.HasValue)
             {
                 var challenge = await _context.Challenges.FindAsync(challengeId.Value);
                 if (challenge != null)
                 {
-                    challenge.Status = ChallengeStatus.Completed;
+                    if (challenge.ResultMode == GameMode.TeamBattle)
+                    {
+                        challenge.CurrentScore_TeamA++;
+                        if (challenge.CurrentScore_TeamA >= challenge.Config_TargetWins)
+                        {
+                            challenge.Status = ChallengeStatus.Finished;
+                            challenge.EndDate = DateTime.Now;
+                        }
+                    }
                     await _context.SaveChangesAsync();
                 }
             }
 
-            // Update rankings if match is ranked
-            if (isRanked)
-            {
-                await UpdateRankingsAsync(match);
-            }
-
             return match;
-        }
-
-        private async Task UpdateRankingsAsync(Match match)
-        {
-            // Add 0.1 to winners
-            await UpdateMemberRankAsync(match.Winner1Id, 0.1);
-            if (match.Winner2Id.HasValue)
-            {
-                await UpdateMemberRankAsync(match.Winner2Id.Value, 0.1);
-            }
-
-            // Subtract 0.1 from losers (minimum 1.0)
-            await UpdateMemberRankAsync(match.Loser1Id, -0.1);
-            if (match.Loser2Id.HasValue)
-            {
-                await UpdateMemberRankAsync(match.Loser2Id.Value, -0.1);
-            }
-        }
-
-        private async Task UpdateMemberRankAsync(int memberId, double delta)
-        {
-            var member = await _context.Members.FindAsync(memberId);
-            if (member != null)
-            {
-                member.RankLevel = Math.Max(1.0, member.RankLevel + delta);
-                await _context.SaveChangesAsync();
-            }
         }
 
         public async Task<List<Match>> GetMatchHistoryAsync(int? memberId = null)
@@ -110,6 +101,33 @@ namespace PickleballClubManagement.Services
                 .Include(m => m.Loser1)
                 .Include(m => m.Loser2)
                 .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public async Task UpdateMatchAsync(int matchId, WinningSide winningSide, bool isRanked)
+        {
+            var match = await GetMatchByIdAsync(matchId);
+            if (match == null)
+                throw new ArgumentException("Match không tồn tại");
+
+            match.WinningSide = winningSide;
+            match.IsRanked = isRanked;
+
+            if (isRanked)
+            {
+                await _rankService.UpdateRankAfterMatchAsync(match);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteMatchAsync(int matchId)
+        {
+            var match = await _context.Matches.FindAsync(matchId);
+            if (match != null)
+            {
+                _context.Matches.Remove(match);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

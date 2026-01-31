@@ -1,0 +1,171 @@
+@page
+@model PickleballClubManagement.Pages.Financial.TransactionsModel
+@{
+    ViewData["Title"] = "Quản Lý Giao Dịch Tài Chính";
+}
+
+<div class="page-header">
+    <h1 class="page-title">💰 Quản Lý Giao Dịch Tài Chính</h1>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success">
+        ✅ @Model.SuccessMessage
+    </div>
+}
+
+@if (Model.IsTreasuryDeficit)
+{
+    <div class="alert" style="background-color: #ffe6e6; border-left: 4px solid #cc0000; padding: 1rem;">
+        <strong style="color: #cc0000;">⚠️ CẢNH BÁO: QUỸ ĐANG ÂM</strong>
+        <p style="margin: 0.5rem 0 0 0;">Số dư quỹ hiện tại: <strong>@Model.TreasuryBalance.ToString("N0")}₫</strong></p>
+    </div>
+}
+
+<!-- Thống kê nhanh -->
+<div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+    <div class="card" style="text-align: center; padding: 1.5rem;">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
+        <div style="font-size: 0.875rem; color: var(--color-gray-700);">Tổng Thu</div>
+        <div style="font-size: 1.5rem; font-weight: bold; color: #28a745;">
+            @Model.TotalIncome.ToString("N0")}₫
+        </div>
+    </div>
+
+    <div class="card" style="text-align: center; padding: 1.5rem;">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📉</div>
+        <div style="font-size: 0.875rem; color: var(--color-gray-700);">Tổng Chi</div>
+        <div style="font-size: 1.5rem; font-weight: bold; color: #dc3545;">
+            @Model.TotalExpense.ToString("N0")}₫
+        </div>
+    </div>
+
+    <div class="card" style="text-align: center; padding: 1.5rem; @(Model.TreasuryBalance < 0 ? "background-color: #ffe6e6;" : "")">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">💳</div>
+        <div style="font-size: 0.875rem; color: var(--color-gray-700);">Số Dư Quỹ</div>
+        <div style="font-size: 1.5rem; font-weight: bold; @(Model.TreasuryBalance < 0 ? "color: #cc0000;" : "color: #007bff;")">
+            @Model.TreasuryBalance.ToString("N0")}₫
+        </div>
+    </div>
+</div>
+
+<div class="grid" style="grid-template-columns: 1fr 2fr; gap: 2rem;">
+    <!-- Form Thêm Giao Dịch -->
+    <div class="card">
+        <div class="card-header">
+            <h3 style="margin: 0;">➕ Thêm Giao Dịch</h3>
+        </div>
+
+        <form method="post" asp-page-handler="AddTransaction" style="padding: 1.5rem;">
+            <div class="form-group">
+                <label for="categoryId">Danh Mục <span style="color: red;">*</span></label>
+                <select id="categoryId" name="Input.CategoryId" class="form-control" required>
+                    <option value="">-- Chọn Danh Mục --</option>
+                    <optgroup label="Thu">
+                        @foreach (var cat in Model.Categories.Where(c => c.Type == TransactionType.Income))
+                        {
+                            <option value="@cat.Id">@cat.Name</option>
+                        }
+                    </optgroup>
+                    <optgroup label="Chi">
+                        @foreach (var cat in Model.Categories.Where(c => c.Type == TransactionType.Expense))
+                        {
+                            <option value="@cat.Id">@cat.Name</option>
+                        }
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Số Tiền <span style="color: red;">*</span></label>
+                <input type="number" id="amount" name="Input.Amount" class="form-control" 
+                       placeholder="Ví dụ: 500000" step="1000" required />
+            </div>
+
+            <div class="form-group">
+                <label for="description">Mô Tả <span style="color: red;">*</span></label>
+                <textarea id="description" name="Input.Description" class="form-control" 
+                          placeholder="Mô tả chi tiết giao dịch"
+                          style="min-height: 80px;" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Ngày Giao Dịch</label>
+                <input type="datetime-local" id="date" name="Input.Date" class="form-control" 
+                       value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                💾 Thêm Giao Dịch
+            </button>
+        </form>
+
+        <div class="card-footer" style="padding: 1rem;">
+            <a href="@Url.Page("Categories")" class="btn btn-outline" style="display: block; text-align: center;">
+                ⚙️ Quản Lý Danh Mục
+            </a>
+        </div>
+    </div>
+
+    <!-- Danh sách giao dịch -->
+    <div>
+        <div style="margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <form method="get" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <input type="date" name="startDate" class="form-control" style="width: auto;" placeholder="Từ ngày" />
+                <input type="date" name="endDate" class="form-control" style="width: auto;" placeholder="Đến ngày" />
+                <select name="categoryId" class="form-control" style="width: auto;">
+                    <option value="">Tất cả Danh Mục</option>
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <option value="@cat.Id">@cat.Name</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-outline">🔍 Lọc</button>
+            </form>
+        </div>
+
+        @if (Model.Transactions.Any())
+        {
+            <div style="max-height: 600px; overflow-y: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead style="background-color: var(--color-gray-100); position: sticky; top: 0;">
+                        <tr>
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid var(--color-gray-300);">Ngày</th>
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid var(--color-gray-300);">Danh Mục</th>
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid var(--color-gray-300);">Mô Tả</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid var(--color-gray-300);">Số Tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var transaction in Model.Transactions)
+                        {
+                            <tr style="border-bottom: 1px solid var(--color-gray-200);">
+                                <td style="padding: 0.75rem;">
+                                    @transaction.Date.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+                                <td style="padding: 0.75rem;">
+                                    @(transaction.Category?.Type == TransactionType.Income ? "📈" : "📉")
+                                    @transaction.Category?.Name
+                                </td>
+                                <td style="padding: 0.75rem;">@transaction.Description</td>
+                                <td style="padding: 0.75rem; text-align: right; font-weight: bold;
+                                    @(transaction.Category?.Type == TransactionType.Income ? "color: #28a745;" : "color: #dc3545;")">
+                                    @(transaction.Category?.Type == TransactionType.Income ? "+" : "-")
+                                    @transaction.Amount.ToString("N0")}₫
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="card" style="text-align: center; padding: 2rem;">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">📭</div>
+                <p>Không có giao dịch nào</p>
+            </div>
+        }
+    </div>
+</div>

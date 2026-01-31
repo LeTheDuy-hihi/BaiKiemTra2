@@ -27,7 +27,8 @@ namespace PickleballClubManagement.Models
         [StringLength(500)]
         public string? Notes { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime? ModifiedDate { get; set; }
 
         // Navigation property
         [ForeignKey("MemberId")]

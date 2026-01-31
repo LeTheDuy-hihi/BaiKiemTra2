@@ -47,5 +47,37 @@ namespace PickleballClubManagement.Services
                 .OrderBy(m => m.FullName)
                 .ToListAsync();
         }
+
+        public async Task<List<Member>> GetTopRankedMembersAsync(int count = 5)
+        {
+            return await _context.Members
+                .Where(m => m.Status == "Active")
+                .OrderByDescending(m => m.RankLevel)
+                .Take(count)
+                .ToListAsync();
+        }
+
+        public async Task<Member> UpdateMemberAsync(int memberId, string? fullName, DateTime? dateOfBirth, string? phoneNumber, string? email)
+        {
+            var member = await _context.Members.FindAsync(memberId);
+            if (member != null)
+            {
+                if (!string.IsNullOrEmpty(fullName))
+                    member.FullName = fullName;
+
+                if (dateOfBirth.HasValue)
+                    member.DateOfBirth = dateOfBirth;
+
+                if (!string.IsNullOrEmpty(phoneNumber))
+                    member.PhoneNumber = phoneNumber;
+
+                if (!string.IsNullOrEmpty(email))
+                    member.Email = email;
+
+                await _context.SaveChangesAsync();
+            }
+
+            return member!;
+        }
     }
 }

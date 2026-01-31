@@ -179,28 +179,28 @@ namespace PickleballClubManagement.Services
                         MemberId = createdMembers[0].Id,
                         StartTime = today.AddHours(8),
                         EndTime = today.AddHours(10),
-                        CreatedAt = DateTime.Now.AddDays(-1)
+                        CreatedDate = DateTime.Now.AddDays(-1)
                     },
                     new Booking
                     {
                         MemberId = createdMembers[1].Id,
                         StartTime = today.AddHours(14),
                         EndTime = today.AddHours(16),
-                        CreatedAt = DateTime.Now.AddHours(-2)
+                        CreatedDate = DateTime.Now.AddHours(-2)
                     },
                     new Booking
                     {
                         MemberId = createdMembers[2].Id,
                         StartTime = today.AddHours(16),
                         EndTime = today.AddHours(18),
-                        CreatedAt = DateTime.Now.AddHours(-1)
+                        CreatedDate = DateTime.Now.AddHours(-1)
                     },
                     new Booking
                     {
                         MemberId = createdMembers[3].Id,
                         StartTime = today.AddDays(1).AddHours(10),
                         EndTime = today.AddDays(1).AddHours(12),
-                        CreatedAt = DateTime.Now
+                        CreatedDate = DateTime.Now
                     }
                 };
 

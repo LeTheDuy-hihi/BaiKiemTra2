@@ -8,5 +8,8 @@ namespace PickleballClubManagement.Services
         Task<Booking> CreateBookingAsync(int memberId, int courtId, DateTime startTime, DateTime endTime, string? notes);
         Task<List<Booking>> GetBookingsByDateAsync(DateTime date);
         Task<List<Booking>> GetMemberBookingsAsync(int memberId);
+        Task<Booking?> GetBookingByIdAsync(int bookingId);
+        Task UpdateBookingAsync(int bookingId, BookingStatus status, string? notes);
+        Task CancelBookingAsync(int bookingId);
     }
 }

@@ -1,0 +1,134 @@
+@page
+@model PickleballClubManagement.Pages.Financial.CategoriesModel
+@{
+    ViewData["Title"] = "Quản Lý Danh Mục Giao Dịch";
+}
+
+<div class="page-header">
+    <h1 class="page-title">🏷️ Quản Lý Danh Mục Giao Dịch</h1>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success">
+        ✅ @Model.SuccessMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">
+        ❌ @Model.ErrorMessage
+    </div>
+}
+
+<div class="grid" style="grid-template-columns: 1fr 2fr; gap: 2rem;">
+    <!-- Form Thêm/Sửa Danh Mục -->
+    <div class="card">
+        <div class="card-header">
+            <h3 style="margin: 0;">📝 @(Model.EditingCategoryId.HasValue ? "Cập Nhật Danh Mục" : "Thêm Danh Mục")</h3>
+        </div>
+
+        <form method="post" style="padding: 1.5rem;">
+            <div class="form-group">
+                <label for="name">Tên Danh Mục <span style="color: red;">*</span></label>
+                <input type="text" id="name" name="InputCategory.Name" class="form-control" 
+                       placeholder="Ví dụ: Tiền Sân, Nước, Quỹ..." required 
+                       value="@Model.InputCategory.Name" />
+                <span asp-validation-for="InputCategory.Name" class="validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="type">Loại <span style="color: red;">*</span></label>
+                <select id="type" name="InputCategory.Type" class="form-control" required>
+                    <option value="">-- Chọn Loại --</option>
+                    <option value="0" asp-selected="@(Model.InputCategory.Type == TransactionType.Income)">📈 Thu (Income)</option>
+                    <option value="1" asp-selected="@(Model.InputCategory.Type == TransactionType.Expense)">📉 Chi (Expense)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Mô Tả</label>
+                <textarea id="description" name="InputCategory.Description" class="form-control" 
+                          placeholder="Mô tả chi tiết danh mục"
+                          style="min-height: 80px;">@Model.InputCategory.Description</textarea>
+            </div>
+
+            @if (Model.EditingCategoryId.HasValue)
+            {
+                <input type="hidden" name="EditingCategoryId" value="@Model.EditingCategoryId" />
+                <button type="submit" asp-page-handler="Update" class="btn btn-primary" style="width: 100%;">
+                    💾 Cập Nhật
+                </button>
+            }
+            else
+            {
+                <button type="submit" asp-page-handler="Create" class="btn btn-primary" style="width: 100%;">
+                    ➕ Thêm Danh Mục
+                </button>
+            }
+        </form>
+    </div>
+
+    <!-- Danh sách danh mục -->
+    <div>
+        @if (Model.Categories.Any())
+        {
+            <div class="grid" style="grid-template-columns: 1fr;">
+                @foreach (var category in Model.Categories.OrderBy(c => c.Type))
+                {
+                    <div class="card">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4 style="margin: 0;">
+                                    @(category.Type == TransactionType.Income ? "📈" : "📉") @category.Name
+                                </h4>
+                                <small style="color: var(--color-gray-700);">
+                                    @(category.Type == TransactionType.Income ? "Thu Nhập" : "Chi Phí")
+                                </small>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-sm btn-outline" 
+                                        onclick="editCategory(@category.Id, '@category.Name', @((int)category.Type), '@(category.Description ?? "")')">
+                                    ✏️ Sửa
+                                </button>
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@category.Id" 
+                                      style="display: inline;" 
+                                      onsubmit="return confirm('Xác nhận xóa danh mục này?');">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        🗑️ Xóa
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(category.Description))
+                        {
+                            <div style="padding: 1rem 0; color: var(--color-gray-700); font-size: 0.875rem;">
+                                📌 @category.Description
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="card" style="text-align: center; padding: 2rem;">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">🏷️</div>
+                <p>Không có danh mục nào</p>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+function editCategory(id, name, type, description) {
+    document.getElementById("name").value = name;
+    document.getElementById("type").value = type;
+    document.getElementById("description").value = description;
+    document.querySelector("input[name='EditingCategoryId']").value = id;
+    
+    // Scroll to form
+    document.querySelector(".card").scrollIntoView({ behavior: "smooth" });
+}
+</script>

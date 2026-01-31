@@ -34,7 +34,7 @@ namespace PickleballClubManagement.Services
                 EndTime = endTime,
                 Status = BookingStatus.Confirmed,
                 Notes = notes,
-                CreatedAt = DateTime.Now
+                CreatedDate = DateTime.Now
             };
 
             _context.Bookings.Add(booking);
@@ -50,8 +50,8 @@ namespace PickleballClubManagement.Services
 
             return await _context.Bookings
                 .Include(b => b.Member)
-                .Include(b => b.Court) // Added Court include
-                .Where(b => b.StartTime >= startOfDay && b.StartTime < endOfDay && b.Status != BookingStatus.Cancelled) // Added status filter
+                .Include(b => b.Court)
+                .Where(b => b.StartTime >= startOfDay && b.StartTime < endOfDay && b.Status != BookingStatus.Cancelled)
                 .OrderBy(b => b.StartTime)
                 .ToListAsync();
         }
@@ -60,9 +60,41 @@ namespace PickleballClubManagement.Services
         {
             return await _context.Bookings
                 .Include(b => b.Member)
+                .Include(b => b.Court)
                 .Where(b => b.MemberId == memberId)
                 .OrderByDescending(b => b.StartTime)
                 .ToListAsync();
+        }
+
+        public async Task<Booking?> GetBookingByIdAsync(int bookingId)
+        {
+            return await _context.Bookings
+                .Include(b => b.Member)
+                .Include(b => b.Court)
+                .FirstOrDefaultAsync(b => b.Id == bookingId);
+        }
+
+        public async Task UpdateBookingAsync(int bookingId, BookingStatus status, string? notes)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking != null)
+            {
+                booking.Status = status;
+                if (notes != null)
+                    booking.Notes = notes;
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task CancelBookingAsync(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking != null)
+            {
+                booking.Status = BookingStatus.Cancelled;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

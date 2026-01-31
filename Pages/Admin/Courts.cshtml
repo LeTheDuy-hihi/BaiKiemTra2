@@ -1,0 +1,130 @@
+@page
+@model PickleballClubManagement.Pages.Admin.CourtsModel
+@{
+    ViewData["Title"] = "Quản Lý Sân Đấu";
+}
+
+<div class="page-header">
+    <h1 class="page-title">🏸 Quản Lý Sân Đấu</h1>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success">
+        ✅ @Model.SuccessMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">
+        ❌ @Model.ErrorMessage
+    </div>
+}
+
+<div class="grid" style="grid-template-columns: 1fr 2fr; gap: 2rem;">
+    <!-- Form Thêm/Sửa Sân -->
+    <div class="card">
+        <div class="card-header">
+            <h3 style="margin: 0;">📝 @(Model.EditingCourtId.HasValue ? "Cập Nhật Sân" : "Thêm Sân Mới")</h3>
+        </div>
+
+        <form method="post" style="padding: 1.5rem;">
+            <div class="form-group">
+                <label for="name">Tên Sân <span style="color: red;">*</span></label>
+                <input type="text" id="name" name="InputCourt.Name" class="form-control" 
+                       placeholder="Ví dụ: Sân 1, Sân 2..." required 
+                       value="@Model.InputCourt.Name" />
+                <span asp-validation-for="InputCourt.Name" class="validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Mô Tả</label>
+                <textarea id="description" name="InputCourt.Description" class="form-control" 
+                          placeholder="Mô tả chi tiết về sân"
+                          style="min-height: 100px;">@Model.InputCourt.Description</textarea>
+            </div>
+
+            @if (Model.EditingCourtId.HasValue)
+            {
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="InputCourt.IsActive" value="true" 
+                               @(Model.InputCourt.IsActive ? "checked" : "") />
+                        Kích Hoạt Sân
+                    </label>
+                </div>
+                <input type="hidden" name="EditingCourtId" value="@Model.EditingCourtId" />
+                <button type="submit" asp-page-handler="Update" class="btn btn-primary" style="width: 100%;">
+                    💾 Cập Nhật
+                </button>
+            }
+            else
+            {
+                <button type="submit" asp-page-handler="Create" class="btn btn-primary" style="width: 100%;">
+                    ➕ Thêm Sân
+                </button>
+            }
+        </form>
+    </div>
+
+    <!-- Danh Sách Sân -->
+    <div>
+        @if (Model.Courts.Any())
+        {
+            <div class="grid" style="grid-template-columns: 1fr;">
+                @foreach (var court in Model.Courts)
+                {
+                    <div class="card">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4 style="margin: 0;">🏸 @court.Name</h4>
+                                <small style="color: var(--color-gray-700);">
+                                    @(court.IsActive ? "✅ Đang Hoạt Động" : "❌ Đã Vô Hiệu Hóa")
+                                </small>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-sm btn-outline" 
+                                        onclick="editCourt(@court.Id, '@court.Name', '@court.Description', @(court.IsActive ? "true" : "false"))">
+                                    ✏️ Sửa
+                                </button>
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@court.Id" 
+                                      style="display: inline;" 
+                                      onsubmit="return confirm('Xác nhận xóa sân này?');">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        🗑️ Xóa
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(court.Description))
+                        {
+                            <div style="padding: 1rem 0; color: var(--color-gray-700); font-size: 0.875rem;">
+                                📌 @court.Description
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="card" style="text-align: center; padding: 2rem;">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">🏜️</div>
+                <p>Không có sân nào</p>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+function editCourt(id, name, description, isActive) {
+    document.getElementById("name").value = name;
+    document.getElementById("description").value = description;
+    document.querySelector("input[name='InputCourt.IsActive']").checked = isActive;
+    document.querySelector("input[name='EditingCourtId']").value = id;
+    
+    // Scroll to form
+    document.querySelector(".card").scrollIntoView({ behavior: "smooth" });
+}
+</script>

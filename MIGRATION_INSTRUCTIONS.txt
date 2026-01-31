@@ -1,0 +1,5 @@
+// RUN IN PACKAGE MANAGER CONSOLE:
+// Add-Migration AddNotificationsActivityLogsAndMatchScores
+// Update-Database
+
+// Sau đó chạy DbSeeder trong Program.cs hoặc Startup

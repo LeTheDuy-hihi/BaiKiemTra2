@@ -22,6 +22,9 @@ namespace PickleballClubManagement.Data
         public DbSet<TransactionCategory> TransactionCategories { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Participant> Participants { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<ActivityLog> ActivityLogs { get; set; }
+        public DbSet<MatchScore> MatchScores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -39,6 +42,9 @@ namespace PickleballClubManagement.Data
             builder.Entity<TransactionCategory>().ToTable("186_TransactionCategories");
             builder.Entity<Transaction>().ToTable("186_Transactions");
             builder.Entity<Participant>().ToTable("186_Participants");
+            builder.Entity<Notification>().ToTable("186_Notifications");
+            builder.Entity<ActivityLog>().ToTable("186_ActivityLogs");
+            builder.Entity<MatchScore>().ToTable("186_MatchScores");
 
             // Configure Member relationships
             builder.Entity<Member>()

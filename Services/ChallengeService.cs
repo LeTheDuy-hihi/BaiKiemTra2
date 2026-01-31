@@ -100,5 +100,20 @@ namespace PickleballClubManagement.Services
                 .Include(c => c.Creator)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
+
+        public async Task<int> GetOpenChallengesCountAsync()
+        {
+            return await _context.Challenges
+                .CountAsync(c => c.Status == ChallengeStatus.Open || c.Status == ChallengeStatus.Ongoing);
+        }
+
+        public async Task<List<News>> GetPinnedNewsAsync()
+        {
+            return await _context.News
+                .Where(n => n.IsPinned)
+                .OrderByDescending(n => n.CreatedDate)
+                .Take(5)
+                .ToListAsync();
+        }
     }
 }
